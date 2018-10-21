@@ -1,17 +1,51 @@
 import React, { Component } from 'react';
-import './App.css';
+// import './App.css';
+import Box from './Box';
+
+const NUM_BOXES = 32;
 
 class App extends Component {
   
   constructor(props) {
     super(props);
+    //this makes an array of 32 color strings:
+    const boxes = Array(NUM_BOXES).fill().map(this.getRandomColor, this);
+    // console.log(boxes);
+    this.state = {boxes}
+    setInterval(()=> {
+      //make a copy of the boxes
+      const boxCopy = this.state.boxes.slice();
+      //pick a random box, change its color
+      const randomBox = Math.floor(Math.random()*boxCopy.length);
+      boxCopy[randomBox] = this.getRandomColor();
+      this.setState({boxes: boxCopy});
+    },300);
+  }
+
+  getRandomColor() {
+    //this pulls from defaultProps below
+    let colorIdx = Math.floor(Math.random()*this.props.allColors.length);
+    //returns random color string from colors array
+    return this.props.allColors[colorIdx];
   }
   
+  
+
   render() {
 
+    //take 32 colors and make boxes from them
+    // const boxes = App.defaultProps.allColors.map(color=> {
+    //   return <Box key={color} color={color}/>;
+    // });
+    
+    const boxes = this.state.boxes.map((color, idx)=> (
+      <Box key={idx} color={color}/>
+    ));
+
+    
     return (
       <div className="App">
-        Render boxes here
+        {boxes}
       </div>
     );
   }
